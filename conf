@@ -12,6 +12,9 @@ set updatetime=300
 set shortmess+=c
 set signcolumn=yes
 
+" סגירה אוטומטית של תיבת ההשלמות
+set completeopt=menu,menuone,noselect
+
 " ===== Auto-complete (כמו VSCode IntelliSense) =====
 " Tab לניווט בהשלמות
 inoremap <silent><expr> <TAB>
