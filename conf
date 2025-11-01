@@ -1,45 +1,78 @@
 " =======================================
-" COC - VSCode-like smart completion
+" COC (Conquer of Completion) - VSCode Style Smart Config
 " =======================================
 
-" Let Coc trigger suggestions automatically when appropriate
+" --- General behavior ---
+" Enable Coc suggestions when appropriate (from LSP)
 let g:coc_enable_auto_trigger = 1
 
-" Popup menu settings
+" Configure completion popup behavior
 set completeopt=menu,menuone,noinsert,noselect
 
-" --- Completion keymaps ---
+" =======================================
+" COMPLETION KEYMAPS
+" =======================================
 
-" Tab → if menu open, move to next item; otherwise trigger suggestions
+" Tab → move to next suggestion, or trigger completion if none
 inoremap <silent><expr> <Tab>
       \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
 
-" Shift+Tab → previous item in menu
+" Shift+Tab → move to previous suggestion
 inoremap <silent><expr> <S-Tab>
       \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" Space → always insert a normal space (never confirm)
+" Space → always insert a real space, never confirm completion
 inoremap <silent><expr> <Space> "\<Space>"
 
-" Ctrl+Space → manually trigger suggestions
+" Ctrl+Space → manually trigger suggestions (like VSCode)
 inoremap <silent><expr> <C-Space> coc#refresh()
 
-" --- Enter behavior (smart like VSCode) ---
-" If popup is visible AND a selection was made manually, confirm it.
-" Otherwise, just insert a normal newline.
+" --- Smart Enter behavior ---
+" If popup visible and user selected something, confirm it.
+" Otherwise, Enter just makes a newline.
 inoremap <silent><expr> <CR>
       \ coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
 
-" --- Close popup if it's hanging while typing ---
-" (ensures the menu hides automatically when you keep typing)
-autocmd TextChangedI * if coc#pum#visible() | call coc#pum#stop() | endif
-autocmd CursorMovedI * if coc#pum#visible() | call coc#pum#stop() | endif
+" =======================================
+" AUTO-CLOSE COMPLETION POPUP
+" =======================================
 
-" --- LSP keymaps ---
+" Automatically close popup when:
+" - typing continues
+" - cursor moves
+" - you leave insert mode
+" - completion finished
+autocmd CursorMovedI,InsertLeave,CompleteDonePre * if coc#pum#visible() | call coc#pum#stop() | endif
+autocmd TextChangedI * if coc#pum#visible() | call coc#pum#stop() | endif
+
+" Close popup when typing closing characters
+inoremap <expr> ) coc#pum#visible() ? (coc#pum#stop(), ')') : ')'
+inoremap <expr> } coc#pum#visible() ? (coc#pum#stop(), '}') : '}'
+inoremap <expr> ] coc#pum#visible() ? (coc#pum#stop(), ']') : ']'
+inoremap <expr> ; coc#pum#visible() ? (coc#pum#stop(), ';') : ';'
+inoremap <expr> , coc#pum#visible() ? (coc#pum#stop(), ',') : ','
+
+" =======================================
+" LSP ACTIONS
+" =======================================
+
+" Go to definition
 nmap <silent> gd <Plug>(coc-definition)
+
+" Find references
 nmap <silent> gr <Plug>(coc-references)
+
+" Show hover documentation
 nmap <silent> K :call CocActionAsync('doHover')<CR>
+
+" Rename symbol
 nmap <leader>rn <Plug>(coc-rename)
+
+" Format current file
 nmap <leader>f <Plug>(coc-format)
+
+" =======================================
+" END OF FILE
+" =======================================
