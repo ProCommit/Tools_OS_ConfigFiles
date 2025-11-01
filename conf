@@ -1,41 +1,41 @@
 " =======================================
-" COC.NVIM — Close popup properly on symbols (Final fixed)
+" FINAL FIX — Close Coc popup on closing symbols
 " =======================================
 
 set completeopt=menu,menuone,noinsert,noselect
 let g:coc_enable_auto_trigger = 1
 let g:coc_suggest_disable_preselect = 1
 
-" --- ENTER: Confirm only if a suggestion is selected ---
+" --- ENTER ---
 inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
 
-" --- TAB navigation ---
+" --- TAB ---
 inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
 inoremap <silent><expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" --- Manual trigger like VSCode ---
+" --- CTRL+SPACE ---
 inoremap <silent><expr> <C-Space> coc#refresh()
 
-" --- Regular space (do nothing special) ---
+" --- SPACE ---
 inoremap <silent><expr> <Space> " "
 
-" --- Function: close popup cleanly without blocking typing ---
-function! ClosePopupIfVisible() abort
+" --- FUNCTION: Close popup without writing extra characters ---
+function! ClosePopupIfVisible()
   if coc#pum#visible()
     call coc#pum#stop()
   endif
 endfunction
 
-" --- Close the popup AFTER writing the symbol ---
-" This ensures you can type the character normally,
-" and only then the popup will close if it was open.
+" --- SAFE EXPRESSION MAPPINGS ---
+" סוגריים, סוגרים ופסיקים יסגרו את ההשלמה מייד אחרי שנכתבים
 for c in [')', '}', ']', ';', ',', '.', ':']
-  execute 'inoremap <silent> ' . c . ' ' . c . ':call ClosePopupIfVisible()<CR>'
+  execute 'inoremap <silent><expr> ' . c .
+        \ ' (coc#pum#visible() ? (call("ClosePopupIfVisible"), "' . c . '") : "' . c . '")'
 endfor
 
-" --- Also close popup when leaving insert or moving ---
+" --- AUTO CLOSE ON MOVE ---
 autocmd InsertLeave,CompleteDonePre *
       \ if coc#pum#visible() | call coc#pum#stop() | endif
 autocmd CursorMovedI,TextChangedI *
