@@ -20,9 +20,15 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" Enter לאישור השלמה
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" Enter - רק משלים אם בחרת במפורש, אחרת סוגר את התיבה ועושה שורה חדשה
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#cancel() . "\<CR>" : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Ctrl+Y או Ctrl+Enter - אישור מפורש של ההשלמה הנבחרת
+inoremap <silent><expr> <C-y> coc#pum#visible() ? coc#pum#confirm() : "\<C-y>"
+inoremap <silent><expr> <C-CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
+
+" Escape - סוגר את תיבת ההשלמות
+inoremap <silent><expr> <Esc> coc#pum#visible() ? coc#pum#cancel() : "\<Esc>"
 
 function! CheckBackspace() abort
   let col = col('.') - 1
