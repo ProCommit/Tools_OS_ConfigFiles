@@ -1,54 +1,55 @@
 " =======================================
-" COC.NVIM — CLEAN & SMART COMPLETION
-" No stuck popups. Works like VSCode.
+" COC.NVIM — No Auto-Select Completion (VSCode style)
 " =======================================
 
+" Prevent automatic selection in popup
 set completeopt=menu,menuone,noinsert,noselect
+
+" Smart auto trigger but with no preselection
 let g:coc_enable_auto_trigger = 1
 
-" --- Completion keymaps ---
+" --- Completion navigation ---
+" Tab → move forward, trigger if closed
 inoremap <silent><expr> <Tab>
       \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
+
+" Shift+Tab → move backward
 inoremap <silent><expr> <S-Tab>
       \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-inoremap <silent><expr> <C-Space> coc#refresh()
-inoremap <silent><expr> <Space> "\<Space>"
 
-" --- Enter only confirms if something selected ---
+" Enter → confirm only if something manually selected
 inoremap <silent><expr> <CR>
       \ coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
 
-" --- Auto close logic (updated for 'main' problem) ---
-function! s:maybe_close_popup() abort
-  " Close popup if:
-  " - it's visible
-  " - no item is selected
-  " - current text doesn't match the suggestion start anymore
-  if coc#pum#visible()
-    let info = coc#pum#info()
-    if info['index'] < 0 || getline('.')[col('.') - 2] =~ '\s'
-      call coc#pum#stop()
-    endif
-  endif
-endfunction
+" Space → always insert space
+inoremap <silent><expr> <Space> "\<Space>"
 
-" Trigger this check whenever you type or move
-autocmd TextChangedI,CursorMovedI * call s:maybe_close_popup()
-autocmd InsertLeave,CompleteDonePre * if coc#pum#visible() | call coc#pum#stop() | endif
+" Ctrl+Space → manually open suggestions
+inoremap <silent><expr> <C-Space> coc#refresh()
 
-" --- Close popup on symbols (like VSCode) ---
+" --- Auto close popup if unused ---
+autocmd CursorMovedI,TextChangedI,InsertLeave,CompleteDonePre *
+      \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
+
+" --- Close popup on symbols like ), }, ; etc. ---
 for c in [')', '}', ']', ';', ',', '"', "'", '(', '{', '[']
-  execute 'inoremap <expr> ' . c . ' coc#pum#visible() ? (coc#pum#stop(), "' . c . '") : "' . c . '"'
+  execute 'inoremap <expr> ' . c . ' coc#pum#visible() && coc#pum#info()["index"] < 0 ? (coc#pum#stop(), "' . c . '") : "' . c . '"'
 endfor
 
-" --- Quick save / search / comments ---
+" --- Save with Ctrl+S ---
 noremap <C-s> :w<CR>
 inoremap <C-s> <Esc>:w<CR>a
+
+" --- Quick search (if you use fzf.vim) ---
 nnoremap <silent> <C-p> :Files<CR>
+
+" --- Comment line (requires vim-commentary) ---
 nmap <silent> <C-/> gcc
 vmap <silent> <C-/> gc
+
+" --- Window navigation ---
 nnoremap <A-Left>  <C-w>h
 nnoremap <A-Right> <C-w>l
 nnoremap <A-Up>    <C-w>k
