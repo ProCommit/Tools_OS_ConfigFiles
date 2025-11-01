@@ -1,48 +1,43 @@
 " =======================================
-" Simple Completion - VSCode-Style
-" Lightweight, no LSP or plugins required
+" COC - Smart VSCode-Like Completion
 " =======================================
 
-" Show a simple popup menu when completion is triggered
+" הצג תיבת השלמה רק כשיש הצעות, לא בכוח
 set completeopt=menu,menuone,noinsert,noselect
 
-" --- Keymaps for Insert mode ---
-" Tab → open or move forward in completion menu
+" הפעל טריגר אוטומטי (אבל עם התנהגות חכמה)
+let g:coc_enable_auto_trigger = 1
+
+" --- TAB ו־Shift+TAB לניווט ---
 inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" : "\<C-x><C-o>"
-
-" Shift+Tab → move backward in completion menu
+      \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
 inoremap <silent><expr> <S-Tab>
-      \ pumvisible() ? "\<C-p>" : "\<C-h>"
+      \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" Enter → always new line (never confirm)
-inoremap <silent> <CR> "\<CR>"
+" --- ENTER חכם ---
+" אם בחרת הצעה → אשר אותה
+" אם לא בחרת → רק ירד שורה
+inoremap <silent><expr> <CR>
+      \ coc#pum#visible() && coc#pum#info()['index'] >= 0
+      \ ? coc#pum#confirm()
+      \ : "\<CR>"
 
-" Space → always real space (never confirm)
+" --- SPACE מתנהג רגיל ---
 inoremap <silent><expr> <Space> "\<Space>"
 
-" Optional: Ctrl+Space also opens completion manually
-inoremap <silent><expr> <C-Space> "\<C-x><C-o>"
+" --- Ctrl+Space פותח השלמות ידנית ---
+inoremap <silent><expr> <C-Space> coc#refresh()
+
+" --- סגור את התיבה אם לא בחרת כלום ---
+" זה החלק שגורם לה להיעלם מיידית אם אתה ממשיך להקליד או עובר שורה
+autocmd CursorMovedI,TextChangedI,InsertLeave,CompleteDonePre *
+      \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
 
 " =======================================
-" Language-specific settings
+" פעולות LSP (אם אתה רוצה להשתמש בהן)
 " =======================================
-
-" --- For C / C++ ---
-autocmd FileType c,cpp setlocal omnifunc=ccomplete#Complete
-
-" --- For Python ---
-autocmd FileType python setlocal omnifunc=python3complete#Complete
-
-" --- For HTML ---
-autocmd FileType html setlocal omnifunc=htmlcomplete#CompleteTags
-
-" --- For CSS ---
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-
-" --- For JavaScript (basic word completion only) ---
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-
-" =======================================
-" End of simple completion config
-" =======================================
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> K :call CocActionAsync('doHover')<CR>
+nmap <leader>rn <Plug>(coc-rename)
+nmap <leader>f <Plug>(coc-format)
