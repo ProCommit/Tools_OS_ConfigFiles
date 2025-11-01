@@ -1,38 +1,42 @@
 " =======================================
-" COC.NVIM — EXACT VSCODE-LIKE BEHAVIOR
+" COC.NVIM — EXACT VSCODE-LIKE BEHAVIOR (FINAL)
 " =======================================
 
-" No auto selection in completion
 set completeopt=menu,menuone,noinsert,noselect
 let g:coc_suggest_disable_preselect = 1
 let g:coc_enable_auto_trigger = 1
 
 " --- ENTER ---
-" Enter confirms only if an item is explicitly selected
+" Confirm only if item selected
 inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
 
-" --- TAB ---
-" Tab / Shift+Tab to navigate between items
+" --- TAB navigation ---
 inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
 inoremap <silent><expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" --- CTRL+SPACE ---
-" Manual trigger for completion (like IntelliSense)
+" --- Manual trigger ---
 inoremap <silent><expr> <C-Space> coc#refresh()
 
-" --- SPACE ---
-" Regular space, does not trigger or confirm completion
+" --- Space stays clean ---
 inoremap <silent><expr> <Space> " "
 
-" --- AUTO CLOSE COMPLETION POPUP ---
-" Close the popup when you type characters that end expressions
+" --- CLOSE completion only (without typing anything extra) ---
+function! CloseCocPopupIfOpen(char) abort
+  if coc#pum#visible()
+    call coc#pum#stop()
+    return ''
+  endif
+  return a:char
+endfunction
+
+" Map symbols that should close popup silently
 for c in [')', '}', ']', ';', ',', '.', ':']
-  execute 'inoremap <expr> ' . c . ' coc#pum#visible() ? (coc#pum#stop(), "' . c . '") : "' . c . '"'
+  execute 'inoremap <expr> ' . c . ' CloseCocPopupIfOpen("' . c . '")'
 endfor
 
-" --- AUTO CLOSE WHEN MOVING OR STOPPING ---
+" --- Auto close popup when moving or continuing ---
 autocmd TextChangedI,CursorMovedI *
       \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
 autocmd InsertLeave,CompleteDonePre *
