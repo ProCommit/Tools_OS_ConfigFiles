@@ -1,32 +1,38 @@
 " =======================================
-" COC.NVIM — BEHAVE EXACTLY LIKE VSCODE
+" COC.NVIM — EXACT VSCODE-LIKE BEHAVIOR
 " =======================================
 
-" לא לבחור אוטומטית שום הצעה
+" No auto selection in completion
 set completeopt=menu,menuone,noinsert,noselect
 let g:coc_suggest_disable_preselect = 1
 let g:coc_enable_auto_trigger = 1
 
 " --- ENTER ---
-" Enter בוחר השלמה רק אם נבחרה במפורש (כמו VSCode)
+" Enter confirms only if an item is explicitly selected
 inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
 
 " --- TAB ---
-" Tab עובר להצעה הבאה, Shift+Tab להצעה קודמת
+" Tab / Shift+Tab to navigate between items
 inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
 inoremap <silent><expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 " --- CTRL+SPACE ---
-" Ctrl+Space פותח תיבת השלמות ידנית (כמו IntelliSense)
+" Manual trigger for completion (like IntelliSense)
 inoremap <silent><expr> <C-Space> coc#refresh()
 
 " --- SPACE ---
-" רווח רגיל בלבד — לא סוגר, לא בוחר
+" Regular space, does not trigger or confirm completion
 inoremap <silent><expr> <Space> " "
 
-" --- סגירה אוטומטית של התיבה ---
+" --- AUTO CLOSE COMPLETION POPUP ---
+" Close the popup when you type characters that end expressions
+for c in [')', '}', ']', ';', ',', '.', ':']
+  execute 'inoremap <expr> ' . c . ' coc#pum#visible() ? (coc#pum#stop(), "' . c . '") : "' . c . '"'
+endfor
+
+" --- AUTO CLOSE WHEN MOVING OR STOPPING ---
 autocmd TextChangedI,CursorMovedI *
       \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
 autocmd InsertLeave,CompleteDonePre *
