@@ -1,43 +1,80 @@
 " =======================================
-" COC - Smart VSCode-Like Completion
+" COC.NVIM — SMART VSCODE-LIKE CONFIG
 " =======================================
 
-" הצג תיבת השלמה רק כשיש הצעות, לא בכוח
+" === General behavior ===
 set completeopt=menu,menuone,noinsert,noselect
-
-" הפעל טריגר אוטומטי (אבל עם התנהגות חכמה)
 let g:coc_enable_auto_trigger = 1
 
-" --- TAB ו־Shift+TAB לניווט ---
+" === Completion keymaps ===
+
+" Tab → move forward if popup visible, otherwise trigger suggestions
 inoremap <silent><expr> <Tab>
       \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
+
+" Shift+Tab → move backward
 inoremap <silent><expr> <S-Tab>
       \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" --- ENTER חכם ---
-" אם בחרת הצעה → אשר אותה
-" אם לא בחרת → רק ירד שורה
+" Enter → confirm only if an item is selected, otherwise newline
 inoremap <silent><expr> <CR>
       \ coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
 
-" --- SPACE מתנהג רגיל ---
-inoremap <silent><expr> <Space> "\<Space>"
-
-" --- Ctrl+Space פותח השלמות ידנית ---
+" Ctrl+Space → open suggestions manually
 inoremap <silent><expr> <C-Space> coc#refresh()
 
-" --- סגור את התיבה אם לא בחרת כלום ---
-" זה החלק שגורם לה להיעלם מיידית אם אתה ממשיך להקליד או עובר שורה
+" Space → always a normal space
+inoremap <silent><expr> <Space> "\<Space>"
+
+" === Auto-close popup logic ===
+" Close the completion popup automatically if:
+"  - You continue typing without selecting anything
+"  - You move the cursor
+"  - You leave insert mode
+"  - You press symbols like ;, ), }, etc.
 autocmd CursorMovedI,TextChangedI,InsertLeave,CompleteDonePre *
       \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
 
-" =======================================
-" פעולות LSP (אם אתה רוצה להשתמש בהן)
-" =======================================
+" Close popup on common symbols
+for c in [')', '}', ']', ';', ',', '"', "'", '(', '{', '[']
+  execute 'inoremap <expr> ' . c . ' coc#pum#visible() ? (coc#pum#stop(), "' . c . '") : "' . c . '"'
+endfor
+
+" === Useful keymaps (VSCode-like) ===
+
+" Save file with Ctrl+S
+noremap <C-s> :w<CR>
+inoremap <C-s> <Esc>:w<CR>a
+
+" Find files with Ctrl+P (requires fzf.vim)
+nnoremap <silent> <C-p> :Files<CR>
+
+" Comment line with Ctrl+/ (requires vim-commentary)
+nmap <silent> <C-/> gcc
+vmap <silent> <C-/> gc
+
+" Move between windows with Alt + arrows
+nnoremap <A-Left>  <C-w>h
+nnoremap <A-Right> <C-w>l
+nnoremap <A-Up>    <C-w>k
+nnoremap <A-Down>  <C-w>j
+
+" === LSP actions ===
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> K :call CocActionAsync('doHover')<CR>
 nmap <leader>rn <Plug>(coc-rename)
 nmap <leader>f <Plug>(coc-format)
+
+" === Optional settings for better experience ===
+" Delay before popup appears (ms)
+let g:coc_suggest_disable = 0
+let g:coc_suggest_trigger_after_insert_enter = 1
+let g:coc_suggest_auto_trigger = 'always'
+let g:coc_suggest_min_trigger_input_length = 2
+
+" =======================================
+" END OF FILE
+" =======================================
