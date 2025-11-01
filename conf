@@ -1,11 +1,16 @@
 " =======================================
-" Minimal Coc Completion Config
+" COC.NVIM — No auto-select first completion
 " =======================================
 
-" גורם לשורה הראשונה לא להיות נבחרת אוטומטית
+" גורם לכך ששום פריט לא ייבחר אוטומטית בתפריט
 set completeopt=menu,menuone,noinsert,noselect
 
-" Enter → יאשר השלמה רק אם נבחרה במפורש, אחרת ירד שורה רגיל
+" השורה הזו מבטיחה ש־Coc לא יסמן אוטומטית את הפריט הראשון
+let g:coc_snippet_next = '<tab>'
+let g:coc_enable_auto_trigger = 1
+let g:coc_suggest_disable_preselect = 1
+
+" Enter → מאשר רק אם נבחר פריט, אחרת שורה רגילה
 inoremap <silent><expr> <CR>
       \ coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
