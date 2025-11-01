@@ -1,44 +1,43 @@
 " =======================================
-" COC (Conquer of Completion) - manual trigger only
+" COC - VSCode-like smart completion
 " =======================================
 
-" Disable automatic completion popups completely
-let g:coc_enable_auto_trigger = 0
+" Let Coc trigger suggestions automatically when appropriate
+let g:coc_enable_auto_trigger = 1
 
-" Completion menu configuration
+" Popup menu settings
 set completeopt=menu,menuone,noinsert,noselect
 
-" --- Manual completion mappings ---
+" --- Completion keymaps ---
 
-" Tab:
-"   - If popup is open → move to next item
-"   - Otherwise → trigger completion menu manually
+" Tab → if menu open, move to next item; otherwise trigger suggestions
 inoremap <silent><expr> <Tab>
       \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
 
-" Shift+Tab:
-"   - If popup is open → move to previous item
-"   - Otherwise → perform backspace
+" Shift+Tab → previous item in menu
 inoremap <silent><expr> <S-Tab>
       \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" Enter:
-"   Always creates a new line — never accepts completion
-inoremap <silent><expr> <CR> "\<CR>"
-
-" Space:
-"   Always inserts a space, never confirms completion
+" Space → always insert a normal space (never confirm)
 inoremap <silent><expr> <Space> "\<Space>"
 
-" Ctrl+Space:
-"   Manually trigger completion (like in VSCode)
+" Ctrl+Space → manually trigger suggestions
 inoremap <silent><expr> <C-Space> coc#refresh()
 
-" --- Optional: confirm selection manually with Ctrl+Y ---
-inoremap <silent><expr> <C-y>
-      \ coc#pum#visible() ? coc#pum#confirm() : "\<C-y>"
+" --- Enter behavior (smart like VSCode) ---
+" If popup is visible AND a selection was made manually, confirm it.
+" Otherwise, just insert a normal newline.
+inoremap <silent><expr> <CR>
+      \ coc#pum#visible() && coc#pum#info()['index'] >= 0
+      \ ? coc#pum#confirm()
+      \ : "\<CR>"
 
-" --- LSP actions ---
+" --- Close popup if it's hanging while typing ---
+" (ensures the menu hides automatically when you keep typing)
+autocmd TextChangedI * if coc#pum#visible() | call coc#pum#stop() | endif
+autocmd CursorMovedI * if coc#pum#visible() | call coc#pum#stop() | endif
+
+" --- LSP keymaps ---
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> K :call CocActionAsync('doHover')<CR>
