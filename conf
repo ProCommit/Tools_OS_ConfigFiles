@@ -1,42 +1,143 @@
-" =======================================
-" FINAL FIX — Close Coc popup on closing symbols
-" =======================================
+" ===== COC.NVIM Configuration - VSCode Style =====
+" הוסף את זה ל-~/.config/nvim/init.vim או ~/.vimrc
 
-set completeopt=menu,menuone,noinsert,noselect
-let g:coc_enable_auto_trigger = 1
-let g:coc_suggest_disable_preselect = 1
+" התקנת coc.nvim (דרך vim-plug):
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" --- ENTER ---
-inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] >= 0
-      \ ? coc#pum#confirm()
-      \ : "\<CR>"
+" ===== הגדרות בסיסיות =====
+set hidden
+set nobackup
+set nowritebackup
+set updatetime=300
+set shortmess+=c
+set signcolumn=yes
 
-" --- TAB ---
-inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
-inoremap <silent><expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+" ===== Auto-complete (כמו VSCode IntelliSense) =====
+" Tab לניווט בהשלמות
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1) :
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" --- CTRL+SPACE ---
-inoremap <silent><expr> <C-Space> coc#refresh()
+" Enter לאישור השלמה
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
-" --- SPACE ---
-inoremap <silent><expr> <Space> " "
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunc
 
-" --- FUNCTION: Close popup without writing extra characters ---
-function! ClosePopupIfVisible()
-  if coc#pum#visible()
-    call coc#pum#stop()
+" Ctrl+Space להצגת השלמות (כמו VSCode)
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" ===== ניווט קוד (Go To Definition וכו') =====
+" F12 - Go to Definition (כמו VSCode)
+nmap <silent> <F12> <Plug>(coc-definition)
+nmap <silent> gd <Plug>(coc-definition)
+
+" Ctrl+F12 - Go to Implementation
+nmap <silent> <C-F12> <Plug>(coc-implementation)
+nmap <silent> gi <Plug>(coc-implementation)
+
+" Shift+F12 - Find All References
+nmap <silent> <S-F12> <Plug>(coc-references)
+nmap <silent> gr <Plug>(coc-references)
+
+" Alt+F12 - Peek Definition (VSCode style)
+nmap <silent> <M-F12> :call CocAction('jumpDefinition', 'vsplit')<CR>
+
+" Go to Type Definition
+nmap <silent> gy <Plug>(coc-type-definition)
+
+" ===== Refactoring =====
+" F2 - Rename Symbol (כמו VSCode)
+nmap <F2> <Plug>(coc-rename)
+
+" Ctrl+. - Code Actions (Quick Fix)
+nmap <silent> <C-.> <Plug>(coc-codeaction-cursor)
+xmap <silent> <C-.> <Plug>(coc-codeaction-selected)
+nmap <silent> <leader>ca <Plug>(coc-codeaction-cursor)
+
+" Alt+Shift+F - Format Document
+nmap <silent> <M-S-f> :call CocAction('format')<CR>
+vmap <silent> <M-S-f> <Plug>(coc-format-selected)
+
+" ===== תיעוד והצגת מידע =====
+" K - Show Documentation (hover)
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
   endif
-endfunction
+endfunc
 
-" --- SAFE EXPRESSION MAPPINGS ---
-" סוגריים, סוגרים ופסיקים יסגרו את ההשלמה מייד אחרי שנכתבים
-for c in [')', '}', ']', ';', ',', '.', ':']
-  execute 'inoremap <silent><expr> ' . c .
-        \ ' (coc#pum#visible() ? (call("ClosePopupIfVisible"), "' . c . '") : "' . c . '")'
-endfor
+" Ctrl+Shift+Space - Show Signature Help
+inoremap <silent> <C-S-Space> <C-r>=CocActionAsync('showSignatureHelp')<CR>
 
-" --- AUTO CLOSE ON MOVE ---
-autocmd InsertLeave,CompleteDonePre *
-      \ if coc#pum#visible() | call coc#pum#stop() | endif
-autocmd CursorMovedI,TextChangedI *
-      \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
+" ===== Diagnostics (Errors & Warnings) =====
+" F8 - Next Diagnostic
+nmap <silent> <F8> <Plug>(coc-diagnostic-next)
+
+" Shift+F8 - Previous Diagnostic
+nmap <silent> <S-F8> <Plug>(coc-diagnostic-prev)
+
+" Ctrl+Shift+M - Show All Diagnostics (Problems Panel)
+nnoremap <silent> <C-S-m> :CocList diagnostics<CR>
+
+" ===== Explorer (File Browser) =====
+" Ctrl+Shift+E - Toggle Explorer (כמו VSCode Sidebar)
+nnoremap <silent> <C-S-e> :CocCommand explorer<CR>
+
+" ===== Search & Navigation =====
+" Ctrl+P - Quick Open File
+nnoremap <silent> <C-p> :CocList files<CR>
+
+" Ctrl+Shift+P - Command Palette
+nnoremap <silent> <C-S-p> :CocList commands<CR>
+
+" Ctrl+Shift+O - Go to Symbol in File
+nnoremap <silent> <C-S-o> :CocList outline<CR>
+
+" Ctrl+T - Go to Symbol in Workspace
+nnoremap <silent> <C-t> :CocList symbols<CR>
+
+" ===== Code Folding =====
+" Ctrl+Shift+[ - Fold
+nnoremap <silent> <C-S-[> :call CocAction('fold')<CR>
+
+" Ctrl+Shift+] - Unfold
+nnoremap <silent> <C-S-]> :call CocAction('unfold')<CR>
+
+" ===== Multi-Cursor (Selection) =====
+" Ctrl+D - Add Selection to Next Find Match
+nmap <silent> <C-d> <Plug>(coc-cursors-word)
+xmap <silent> <C-d> <Plug>(coc-cursors-range)
+
+" ===== Code Lens =====
+" הצגת Code Lens אוטומטית
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" ===== Extensions מומלצות =====
+" התקן דרך :CocInstall
+" :CocInstall coc-json coc-tsserver coc-eslint coc-prettier
+" :CocInstall coc-python coc-rust-analyzer coc-go
+" :CocInstall coc-explorer coc-snippets
+
+" ===== הגדרות נוספות =====
+" הדגשת סימבול נוכחי
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Scroll בחלון הצף
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+
+" הו
