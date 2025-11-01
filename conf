@@ -1,17 +1,42 @@
 " =======================================
-" COC.NVIM — No auto-select first completion
+" COC.NVIM — Close completion on space or symbol
 " =======================================
 
-" גורם לכך ששום פריט לא ייבחר אוטומטית בתפריט
+" לא לבחור אוטומטית הצעה
 set completeopt=menu,menuone,noinsert,noselect
-
-" השורה הזו מבטיחה ש־Coc לא יסמן אוטומטית את הפריט הראשון
-let g:coc_snippet_next = '<tab>'
 let g:coc_enable_auto_trigger = 1
 let g:coc_suggest_disable_preselect = 1
 
-" Enter → מאשר רק אם נבחר פריט, אחרת שורה רגילה
+" Enter → יאשר רק אם בחרת משהו
 inoremap <silent><expr> <CR>
       \ coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
+
+" Tab → הצעה הבאה, או פתיחה אם סגור
+inoremap <silent><expr> <Tab>
+      \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
+inoremap <silent><expr> <S-Tab>
+      \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Ctrl+Space → פתיחת השלמה ידנית
+inoremap <silent><expr> <C-Space> coc#refresh()
+
+" Space → רווח רגיל, וסוגר את התיבה אם היא פתוחה
+inoremap <silent><expr> <Space>
+      \ coc#pum#visible() ? (coc#pum#stop(), "\<Space>") : "\<Space>"
+
+" =======================================
+" סגור את התיבה אוטומטית כשכותבים תווים “לא חוקיים להשלמה”
+" =======================================
+for c in [')', '}', ']', ';', ',', '.', ':', '"', "'", '(', '{', '[']
+  execute 'inoremap <expr> ' . c . ' coc#pum#visible() ? (coc#pum#stop(), "' . c . '") : "' . c . '"'
+endfor
+
+" =======================================
+" בנוסף, אם אתה ממשיך לכתוב – תסגור לבד
+" =======================================
+autocmd TextChangedI,CursorMovedI *
+      \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
+autocmd InsertLeave,CompleteDonePre *
+      \ if coc#pum#visible() | call coc#pum#stop() | endif
