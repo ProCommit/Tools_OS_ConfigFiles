@@ -1,13 +1,12 @@
 " =======================================
-" COC.NVIM — Final stable config (VSCode behavior)
+" COC.NVIM — Close popup properly on symbols (Final fixed)
 " =======================================
 
 set completeopt=menu,menuone,noinsert,noselect
 let g:coc_enable_auto_trigger = 1
 let g:coc_suggest_disable_preselect = 1
 
-" --- ENTER ---
-" Confirm only if item selected
+" --- ENTER: Confirm only if a suggestion is selected ---
 inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
@@ -16,31 +15,28 @@ inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] >= 0
 inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
 inoremap <silent><expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" --- CTRL+SPACE manual trigger ---
+" --- Manual trigger like VSCode ---
 inoremap <silent><expr> <C-Space> coc#refresh()
 
-" --- Regular space ---
+" --- Regular space (do nothing special) ---
 inoremap <silent><expr> <Space> " "
 
-" --- Function: write char normally, then close popup if open ---
-function! CloseCocPopupAfterChar(char) abort
-  " מכניס את התו למסך
-  call feedkeys(a:char, 'in')
-  " סוגר את ההשלמה רק אחרי שהתו נכתב
+" --- Function: close popup cleanly without blocking typing ---
+function! ClosePopupIfVisible() abort
   if coc#pum#visible()
-    call timer_start(1, { -> coc#pum#stop() })
+    call coc#pum#stop()
   endif
-  " לא מחזיר כלום כי התו כבר הוזן
-  return ''
 endfunction
 
-" --- Apply to closing symbols ---
+" --- Close the popup AFTER writing the symbol ---
+" This ensures you can type the character normally,
+" and only then the popup will close if it was open.
 for c in [')', '}', ']', ';', ',', '.', ':']
-  execute 'inoremap <silent><expr> ' . c . ' CloseCocPopupAfterChar("' . c . '")'
+  execute 'inoremap <silent> ' . c . ' ' . c . ':call ClosePopupIfVisible()<CR>'
 endfor
 
-" --- Auto close when moving or continuing typing ---
-autocmd TextChangedI,CursorMovedI *
-      \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
+" --- Also close popup when leaving insert or moving ---
 autocmd InsertLeave,CompleteDonePre *
       \ if coc#pum#visible() | call coc#pum#stop() | endif
+autocmd CursorMovedI,TextChangedI *
+      \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
