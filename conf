@@ -1,0 +1,44 @@
+" =======================================
+" COC configuration - manual completion only
+" =======================================
+
+" --- Completion popup behavior ---
+" Disable automatic popup on typing
+let g:coc_config_home = expand('~/.config/nvim')
+let g:coc_disable_startup_warning = 1
+
+" Don't trigger completion automatically
+let g:coc_enable_auto_trigger = 0
+
+" Make Enter behave normally (new line only)
+inoremap <silent><expr> <CR> "\<CR>"
+
+" --- Manual completion trigger ---
+" Tab opens the completion popup manually
+" If popup is visible → move to next item
+" Otherwise → trigger completion
+inoremap <silent><expr> <Tab> 
+      \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
+
+" Shift+Tab moves backward in the popup list
+inoremap <silent><expr> <S-Tab> 
+      \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Space just inserts space — does not confirm
+inoremap <silent><expr> <Space> "\<Space>"
+
+" --- LSP keymaps ---
+" Go to definition
+nmap <silent> gd <Plug>(coc-definition)
+
+" Find references
+nmap <silent> gr <Plug>(coc-references)
+
+" Show hover info
+nmap <silent> K :call CocActionAsync('doHover')<CR>
+
+" Rename symbol
+nmap <leader>rn <Plug>(coc-rename)
+
+" Format current file
+nmap <leader>f <Plug>(coc-format)
