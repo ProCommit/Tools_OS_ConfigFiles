@@ -1,80 +1,62 @@
 " =======================================
-" COC.NVIM — SMART VSCODE-LIKE CONFIG
+" COC.NVIM — CLEAN & SMART COMPLETION
+" No stuck popups. Works like VSCode.
 " =======================================
 
-" === General behavior ===
 set completeopt=menu,menuone,noinsert,noselect
 let g:coc_enable_auto_trigger = 1
 
-" === Completion keymaps ===
-
-" Tab → move forward if popup visible, otherwise trigger suggestions
+" --- Completion keymaps ---
 inoremap <silent><expr> <Tab>
       \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
-
-" Shift+Tab → move backward
 inoremap <silent><expr> <S-Tab>
       \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <silent><expr> <C-Space> coc#refresh()
+inoremap <silent><expr> <Space> "\<Space>"
 
-" Enter → confirm only if an item is selected, otherwise newline
+" --- Enter only confirms if something selected ---
 inoremap <silent><expr> <CR>
       \ coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
 
-" Ctrl+Space → open suggestions manually
-inoremap <silent><expr> <C-Space> coc#refresh()
+" --- Auto close logic (updated for 'main' problem) ---
+function! s:maybe_close_popup() abort
+  " Close popup if:
+  " - it's visible
+  " - no item is selected
+  " - current text doesn't match the suggestion start anymore
+  if coc#pum#visible()
+    let info = coc#pum#info()
+    if info['index'] < 0 || getline('.')[col('.') - 2] =~ '\s'
+      call coc#pum#stop()
+    endif
+  endif
+endfunction
 
-" Space → always a normal space
-inoremap <silent><expr> <Space> "\<Space>"
+" Trigger this check whenever you type or move
+autocmd TextChangedI,CursorMovedI * call s:maybe_close_popup()
+autocmd InsertLeave,CompleteDonePre * if coc#pum#visible() | call coc#pum#stop() | endif
 
-" === Auto-close popup logic ===
-" Close the completion popup automatically if:
-"  - You continue typing without selecting anything
-"  - You move the cursor
-"  - You leave insert mode
-"  - You press symbols like ;, ), }, etc.
-autocmd CursorMovedI,TextChangedI,InsertLeave,CompleteDonePre *
-      \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
-
-" Close popup on common symbols
+" --- Close popup on symbols (like VSCode) ---
 for c in [')', '}', ']', ';', ',', '"', "'", '(', '{', '[']
   execute 'inoremap <expr> ' . c . ' coc#pum#visible() ? (coc#pum#stop(), "' . c . '") : "' . c . '"'
 endfor
 
-" === Useful keymaps (VSCode-like) ===
-
-" Save file with Ctrl+S
+" --- Quick save / search / comments ---
 noremap <C-s> :w<CR>
 inoremap <C-s> <Esc>:w<CR>a
-
-" Find files with Ctrl+P (requires fzf.vim)
 nnoremap <silent> <C-p> :Files<CR>
-
-" Comment line with Ctrl+/ (requires vim-commentary)
 nmap <silent> <C-/> gcc
 vmap <silent> <C-/> gc
-
-" Move between windows with Alt + arrows
 nnoremap <A-Left>  <C-w>h
 nnoremap <A-Right> <C-w>l
 nnoremap <A-Up>    <C-w>k
 nnoremap <A-Down>  <C-w>j
 
-" === LSP actions ===
+" --- LSP actions ---
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
 nmap <silent> K :call CocActionAsync('doHover')<CR>
 nmap <leader>rn <Plug>(coc-rename)
 nmap <leader>f <Plug>(coc-format)
-
-" === Optional settings for better experience ===
-" Delay before popup appears (ms)
-let g:coc_suggest_disable = 0
-let g:coc_suggest_trigger_after_insert_enter = 1
-let g:coc_suggest_auto_trigger = 'always'
-let g:coc_suggest_min_trigger_input_length = 2
-
-" =======================================
-" END OF FILE
-" =======================================
