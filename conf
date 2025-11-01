@@ -1,20 +1,33 @@
 " =======================================
-" COC.NVIM — Close completion on space or symbol
+" COC.NVIM — BEHAVE EXACTLY LIKE VSCODE
 " =======================================
 
-" לא לבחור אוטומטית הצעה
+" לא לבחור אוטומטית שום הצעה
 set completeopt=menu,menuone,noinsert,noselect
-let g:coc_enable_auto_trigger = 1
 let g:coc_suggest_disable_preselect = 1
+let g:coc_enable_auto_trigger = 1
 
-" Space → סוגר את תיבת ההשלמה אם פתוחה, אחרת רווח רגיל
-inoremap <silent> <expr> <Space> CocCloseIfOpen()
+" --- ENTER ---
+" Enter בוחר השלמה רק אם נבחרה במפורש (כמו VSCode)
+inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] >= 0
+      \ ? coc#pum#confirm()
+      \ : "\<CR>"
 
-function! CocCloseIfOpen() abort
-  if coc#pum#visible()
-    " סגור את תיבת ההשלמה
-    call coc#pum#stop()
-  endif
-  " החזר רווח נקי
-  return " "
-endfunction
+" --- TAB ---
+" Tab עובר להצעה הבאה, Shift+Tab להצעה קודמת
+inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
+inoremap <silent><expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" --- CTRL+SPACE ---
+" Ctrl+Space פותח תיבת השלמות ידנית (כמו IntelliSense)
+inoremap <silent><expr> <C-Space> coc#refresh()
+
+" --- SPACE ---
+" רווח רגיל בלבד — לא סוגר, לא בוחר
+inoremap <silent><expr> <Space> " "
+
+" --- סגירה אוטומטית של התיבה ---
+autocmd TextChangedI,CursorMovedI *
+      \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
+autocmd InsertLeave,CompleteDonePre *
+      \ if coc#pum#visible() | call coc#pum#stop() | endif
