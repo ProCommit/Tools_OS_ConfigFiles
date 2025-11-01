@@ -1,49 +1,40 @@
 " =======================================
-" COC (Conquer of Completion) - VSCode style
+" COC (Conquer of Completion) - safer Enter behavior
 " =======================================
 
-" --- Completion behavior ---
-" Let Coc trigger completion automatically (default)
+" Allow automatic completion suggestions
 let g:coc_enable_auto_trigger = 1
 
-" Configure popup menu options
+" Configure completion popup menu
 set completeopt=menu,menuone,noinsert,noselect
 
-" --- Key mappings for completion ---
-" Tab → next item, triggers completion if none
+" --- Completion keymaps ---
+
+" Tab → move to next completion or trigger it if closed
 inoremap <silent><expr> <Tab>
       \ coc#pum#visible() ? coc#pum#next(1) :
       \ coc#refresh()
 
-" Shift+Tab → previous item
+" Shift+Tab → move to previous completion
 inoremap <silent><expr> <S-Tab>
       \ coc#pum#visible() ? coc#pum#prev(1) :
       \ "\<C-h>"
 
-" Enter → confirm selection if popup visible
-" Otherwise → just insert a normal newline
-inoremap <silent><expr> <CR>
-      \ coc#pum#visible() ? coc#pum#confirm() :
-      \ "\<CR>"
-
-" Space → always insert space (never confirm)
+" Space → always insert real space (never confirms)
 inoremap <silent><expr> <Space> "\<Space>"
 
-" Optional: Ctrl+Space → manually trigger completion
+" Enter → ONLY confirm if user selected an item manually
+" (no auto accept if just typing)
+inoremap <silent><expr> <CR>
+      \ coc#pum#visible() ? (coc#pum#info()['index'] >= 0 ? coc#pum#confirm() : "\<CR>") :
+      \ "\<CR>"
+
+" Ctrl+Space → manual trigger like in VSCode
 inoremap <silent><expr> <C-Space> coc#refresh()
 
 " --- LSP actions ---
-" Go to definition
 nmap <silent> gd <Plug>(coc-definition)
-
-" Find references
 nmap <silent> gr <Plug>(coc-references)
-
-" Show documentation / hover info
 nmap <silent> K :call CocActionAsync('doHover')<CR>
-
-" Rename symbol
 nmap <leader>rn <Plug>(coc-rename)
-
-" Format current buffer
 nmap <leader>f <Plug>(coc-format)
