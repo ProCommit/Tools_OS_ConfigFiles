@@ -1,36 +1,35 @@
 " =======================================
-" COC (Conquer of Completion) - safer Enter behavior
+" COC (Conquer of Completion) - safe Enter config
 " =======================================
 
-" Allow automatic completion suggestions
+" Let Coc suggest automatically (optional)
 let g:coc_enable_auto_trigger = 1
 
-" Configure completion popup menu
+" Completion popup settings
 set completeopt=menu,menuone,noinsert,noselect
 
 " --- Completion keymaps ---
-
-" Tab → move to next completion or trigger it if closed
+" Tab: select next item if popup is visible, otherwise trigger completion
 inoremap <silent><expr> <Tab>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ coc#refresh()
+      \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
 
-" Shift+Tab → move to previous completion
+" Shift+Tab: select previous item
 inoremap <silent><expr> <S-Tab>
-      \ coc#pum#visible() ? coc#pum#prev(1) :
-      \ "\<C-h>"
+      \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" Space → always insert real space (never confirms)
+" Ctrl+Space: manually trigger suggestions
+inoremap <silent><expr> <C-Space> coc#refresh()
+
+" Enter: always insert newline — never confirm completion
+inoremap <silent><expr> <CR> "\<CR>"
+
+" Space: just insert a space, never confirm
 inoremap <silent><expr> <Space> "\<Space>"
 
-" Enter → ONLY confirm if user selected an item manually
-" (no auto accept if just typing)
-inoremap <silent><expr> <CR>
-      \ coc#pum#visible() ? (coc#pum#info()['index'] >= 0 ? coc#pum#confirm() : "\<CR>") :
-      \ "\<CR>"
-
-" Ctrl+Space → manual trigger like in VSCode
-inoremap <silent><expr> <C-Space> coc#refresh()
+" --- Optional: confirm selection manually with Ctrl+y ---
+" (like in VSCode when pressing Enter on purpose)
+inoremap <silent><expr> <C-y>
+      \ coc#pum#visible() ? coc#pum#confirm() : "\<C-y>"
 
 " --- LSP actions ---
 nmap <silent> gd <Plug>(coc-definition)
