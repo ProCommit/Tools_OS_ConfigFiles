@@ -1,10 +1,10 @@
 " =======================================
-" COC.NVIM — EXACT VSCODE-LIKE BEHAVIOR (FINAL)
+" COC.NVIM — Final stable config (VSCode behavior)
 " =======================================
 
 set completeopt=menu,menuone,noinsert,noselect
-let g:coc_suggest_disable_preselect = 1
 let g:coc_enable_auto_trigger = 1
+let g:coc_suggest_disable_preselect = 1
 
 " --- ENTER ---
 " Confirm only if item selected
@@ -16,27 +16,30 @@ inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] >= 0
 inoremap <silent><expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
 inoremap <silent><expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
-" --- Manual trigger ---
+" --- CTRL+SPACE manual trigger ---
 inoremap <silent><expr> <C-Space> coc#refresh()
 
-" --- Space stays clean ---
+" --- Regular space ---
 inoremap <silent><expr> <Space> " "
 
-" --- CLOSE completion only (without typing anything extra) ---
-function! CloseCocPopupIfOpen(char) abort
+" --- Function: write char normally, then close popup if open ---
+function! CloseCocPopupAfterChar(char) abort
+  " מכניס את התו למסך
+  call feedkeys(a:char, 'in')
+  " סוגר את ההשלמה רק אחרי שהתו נכתב
   if coc#pum#visible()
-    call coc#pum#stop()
-    return ''
+    call timer_start(1, { -> coc#pum#stop() })
   endif
-  return a:char
+  " לא מחזיר כלום כי התו כבר הוזן
+  return ''
 endfunction
 
-" Map symbols that should close popup silently
+" --- Apply to closing symbols ---
 for c in [')', '}', ']', ';', ',', '.', ':']
-  execute 'inoremap <expr> ' . c . ' CloseCocPopupIfOpen("' . c . '")'
+  execute 'inoremap <silent><expr> ' . c . ' CloseCocPopupAfterChar("' . c . '")'
 endfor
 
-" --- Auto close popup when moving or continuing ---
+" --- Auto close when moving or continuing typing ---
 autocmd TextChangedI,CursorMovedI *
       \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
 autocmd InsertLeave,CompleteDonePre *
