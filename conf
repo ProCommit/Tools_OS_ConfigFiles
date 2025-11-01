@@ -1,63 +1,12 @@
 " =======================================
-" COC.NVIM — No Auto-Select Completion (VSCode style)
+" Minimal Coc Completion Config
 " =======================================
 
-" Prevent automatic selection in popup
+" גורם לשורה הראשונה לא להיות נבחרת אוטומטית
 set completeopt=menu,menuone,noinsert,noselect
 
-" Smart auto trigger but with no preselection
-let g:coc_enable_auto_trigger = 1
-
-" --- Completion navigation ---
-" Tab → move forward, trigger if closed
-inoremap <silent><expr> <Tab>
-      \ coc#pum#visible() ? coc#pum#next(1) : coc#refresh()
-
-" Shift+Tab → move backward
-inoremap <silent><expr> <S-Tab>
-      \ coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-
-" Enter → confirm only if something manually selected
+" Enter → יאשר השלמה רק אם נבחרה במפורש, אחרת ירד שורה רגיל
 inoremap <silent><expr> <CR>
       \ coc#pum#visible() && coc#pum#info()['index'] >= 0
       \ ? coc#pum#confirm()
       \ : "\<CR>"
-
-" Space → always insert space
-inoremap <silent><expr> <Space> "\<Space>"
-
-" Ctrl+Space → manually open suggestions
-inoremap <silent><expr> <C-Space> coc#refresh()
-
-" --- Auto close popup if unused ---
-autocmd CursorMovedI,TextChangedI,InsertLeave,CompleteDonePre *
-      \ if coc#pum#visible() && coc#pum#info()['index'] < 0 | call coc#pum#stop() | endif
-
-" --- Close popup on symbols like ), }, ; etc. ---
-for c in [')', '}', ']', ';', ',', '"', "'", '(', '{', '[']
-  execute 'inoremap <expr> ' . c . ' coc#pum#visible() && coc#pum#info()["index"] < 0 ? (coc#pum#stop(), "' . c . '") : "' . c . '"'
-endfor
-
-" --- Save with Ctrl+S ---
-noremap <C-s> :w<CR>
-inoremap <C-s> <Esc>:w<CR>a
-
-" --- Quick search (if you use fzf.vim) ---
-nnoremap <silent> <C-p> :Files<CR>
-
-" --- Comment line (requires vim-commentary) ---
-nmap <silent> <C-/> gcc
-vmap <silent> <C-/> gc
-
-" --- Window navigation ---
-nnoremap <A-Left>  <C-w>h
-nnoremap <A-Right> <C-w>l
-nnoremap <A-Up>    <C-w>k
-nnoremap <A-Down>  <C-w>j
-
-" --- LSP actions ---
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gr <Plug>(coc-references)
-nmap <silent> K :call CocActionAsync('doHover')<CR>
-nmap <leader>rn <Plug>(coc-rename)
-nmap <leader>f <Plug>(coc-format)
