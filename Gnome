@@ -1,0 +1,3 @@
+
+gsettings set org.gnome.mutter center-new-windows true
+gsettings set org.gnome.mutter overlay-key ''
