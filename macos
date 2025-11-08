@@ -1,1 +1,3 @@
-sudo sqlite3 /Library/Application\ Support/com.apple.TCC/TCC.db "INSERT OR REPLACE INTO access VALUES('kTCCServiceAccessibility','/opt/homebrew/bin/skhd',0,1,1,NULL,NULL,NULL,'UNUSED',NULL,0,1541440109);"
+mkdir -p ~/Applications/skhd.app/Contents/MacOS
+
+cp /opt/homebrew/bin/skhd ~/Applications/skhd.app/Contents/MacOS/
