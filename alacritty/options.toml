@@ -1,0 +1,17 @@
+[window]
+padding =  { x = 16 , y = 14}
+opacity = 0.9
+blur = true
+decorations =  "None"
+
+
+[font]
+normal = { family = "monospace", style = "Bold" }
+size = 15.0
+
+
+
+[cursor]
+style = {shape = "Beam", blinking = "Always"}
+ 
+
