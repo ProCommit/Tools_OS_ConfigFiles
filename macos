@@ -1,2 +1,73 @@
-mkdir -p ~/Applications/skhd.app/Contents/MacOS
-cp /opt/homebrew/bin/skhd ~/Applications/skhd.app/Contents/MacOS/
+###########################################################
+#  AeroSpace Configuration – by Oron
+#  Full clean version: tiling, launchers & movement
+###########################################################
+
+after-startup-command = []
+start-at-login = true
+
+###########################################################
+# Gaps (רווחים בין חלונות)
+###########################################################
+[gaps]
+inner.horizontal = 7
+inner.vertical   = 7
+outer.left       = 5
+outer.right      = 5
+outer.top        = 5
+outer.bottom     = 5
+
+###########################################################
+# Keybindings - Main Mode
+###########################################################
+[mode.main.binding]
+
+# === Focus windows ===
+cmd-left  = 'focus left'
+cmd-right = 'focus right'
+cmd-down  = 'focus down'
+cmd-up    = 'focus up'
+
+# === Move windows between workspaces ===
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+
+# === Resize windows ===
+alt-minus = 'resize smart -50'
+alt-equal = 'resize smart +50'
+
+# === Layout control ===
+alt-slash  = 'layout tiles horizontal'  # סידור אופקי
+alt-comma  = 'layout tiles vertical'    # סידור אנכי
+
+# === Move windows around ===
+alt-shift-left  = 'move left'
+alt-shift-right = 'move right'
+alt-shift-up    = 'move up'
+alt-shift-down  = 'move down'
+
+# === Close active window ===
+cmd-q = 'close'
+
+# === App launching ===
+alt-enter = 'exec-and-forget /opt/homebrew/bin/alacritty'
+alt-b     = 'exec-and-forget open -n -a "Brave Browser"'
+
+###########################################################
+# Window joining / swapping
+###########################################################
+[mode.service.binding]
+
+# Join current window with neighbor
+alt-ctrl-left  = ['join-with left', 'mode main']
+alt-ctrl-right = ['join-with right', 'mode main']
+alt-ctrl-up    = ['join-with up', 'mode main']
+alt-ctrl-down  = ['join-with down', 'mode main']
+
+# Mark & swap windows (לסמן ולהחליף ביניהם)
+alt-m = 'mark swap'
+alt-s = 'swap-with-marked'
