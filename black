@@ -1,23 +1,23 @@
 [colors.primary]
 background = "#000000"
-foreground = "#ffffff"
+foreground = "#f0f0f0"   # לבן רך שלא מסנוור
 
 [colors.normal]
 black   = "#000000"
-red     = "#aa0000"
-green   = "#00aa00"
-yellow  = "#aa5500"
-blue    = "#0000aa"
-magenta = "#aa00aa"
-cyan    = "#00aaaa"
-white   = "#aaaaaa"
+red     = "#cc4444"
+green   = "#44cc44"
+yellow  = "#cccc44"
+blue    = "#4444cc"
+magenta = "#cc44cc"
+cyan    = "#44cccc"
+white   = "#d0d0d0"   # אפור בהיר יותר לקריאוּת
 
 [colors.bright]
 black   = "#555555"
-red     = "#ff5555"
-green   = "#55ff55"
-yellow  = "#ffff55"
-blue    = "#5555ff"
-magenta = "#ff55ff"
-cyan    = "#55ffff"
+red     = "#ff6666"
+green   = "#66ff66"
+yellow  = "#ffff66"
+blue    = "#6666ff"
+magenta = "#ff66ff"
+cyan    = "#66ffff"
 white   = "#ffffff"
