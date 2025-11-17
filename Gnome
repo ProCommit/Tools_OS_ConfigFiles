@@ -4,14 +4,11 @@ gsettings set org.gnome.mutter overlay-key ''
 
 
 
-# ביטול tile left/right
-gsettings set org.gnome.desktop.wm.keybindings.toggle-tiled-left "[]"
-gsettings set org.gnome.desktop.wm.keybindings.toggle-tiled-right "[]"
+gsettings set org.gnome.desktop.wm.keybindings.tile-left "[]"
+gsettings set org.gnome.desktop.wm.keybindings.tile-right "[]"
 
-# ביטול maximize / unmaximize
 gsettings set org.gnome.desktop.wm.keybindings.maximize "[]"
 gsettings set org.gnome.desktop.wm.keybindings.unmaximize "[]"
 
-# ביטול begin-move / begin-resize
 gsettings set org.gnome.desktop.wm.keybindings.begin-move "[]"
 gsettings set org.gnome.desktop.wm.keybindings.begin-resize "[]"
