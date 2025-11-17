@@ -1,3 +1,7 @@
 gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier '<Control>'
 gsettings set org.gnome.mutter center-new-windows true
 gsettings set org.gnome.mutter overlay-key ''
+gsettings set org.gnome.desktop.wm.keybindings.toggle-tiled-left "[]"
+gsettings set org.gnome.desktop.wm.keybindings.toggle-tiled-right "[]"
+gsettings set org.gnome.desktop.wm.keybindings.maximize "[]"
+gsettings set org.gnome.desktop.wm.keybindings.unmaximize "[]"
