@@ -6,12 +6,15 @@ gsettings set org.gnome.mutter overlay-key ''
 gsettings list-keys org.gnome.desktop.wm.keybindings
 
 
-gsettings set org.gnome.desktop.wm.keybindings.move-to-side-w "[]"
-gsettings set org.gnome.desktop.wm.keybindings.move-to-side-e "[]"
-gsettings set org.gnome.desktop.wm.keybindings.move-to-side-n "[]"
-gsettings set org.gnome.desktop.wm.keybindings.move-to-side-s "[]"
+gsettings set org.gnome.shell.extensions.tiling-assistant.tile-left-half "['<Alt>Left']"
+gsettings set org.gnome.shell.extensions.tiling-assistant.tile-right-half "['<Alt>Right']"
+gsettings set org.gnome.shell.extensions.tiling-assistant.tile-maximize "['<Alt>Up']"
+gsettings set org.gnome.shell.extensions.tiling-assistant.restore-window "['<Alt>Down']"
 
-gsettings set org.gnome.desktop.wm.keybindings.maximize "[]"
-gsettings set org.gnome.desktop.wm.keybindings.minimize "[]"
-gsettings set org.gnome.desktop.wm.keybindings.begin-move "[]"
-gsettings set org.gnome.desktop.wm.keybindings.begin-resize "[]"
+gsettings set org.gnome.shell.extensions.tiling-assistant.tile-bottom-half "['<Alt>KP_2']"
+gsettings set org.gnome.shell.extensions.tiling-assistant.tile-top-half "['<Alt>KP_8']"
+
+gsettings set org.gnome.shell.extensions.tiling-assistant.tile-topleft-quarter "['<Alt>KP_7']"
+gsettings set org.gnome.shell.extensions.tiling-assistant.tile-topright-quarter "['<Alt>KP_9']"
+gsettings set org.gnome.shell.extensions.tiling-assistant.tile-bottomleft-quarter "['<Alt>KP_1']"
+gsettings set org.gnome.shell.extensions.tiling-assistant.tile-bottomright-quarter "['<Alt>KP_3']"
