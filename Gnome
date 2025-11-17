@@ -3,12 +3,4 @@ gsettings set org.gnome.mutter center-new-windows true
 gsettings set org.gnome.mutter overlay-key ''
 
 
-
-gsettings set org.gnome.desktop.wm.keybindings.tile-left "[]"
-gsettings set org.gnome.desktop.wm.keybindings.tile-right "[]"
-
-gsettings set org.gnome.desktop.wm.keybindings.maximize "[]"
-gsettings set org.gnome.desktop.wm.keybindings.unmaximize "[]"
-
-gsettings set org.gnome.desktop.wm.keybindings.begin-move "[]"
-gsettings set org.gnome.desktop.wm.keybindings.begin-resize "[]"
+gsettings list-keys org.gnome.desktop.wm.keybindings
