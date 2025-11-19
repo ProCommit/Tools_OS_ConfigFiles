@@ -1,0 +1,18 @@
+keybinds {
+    shared {
+
+        bind "alt-left"  { MoveFocus "left" }
+        bind "alt-right" { MoveFocus "right" }
+        bind "alt-up"    { MoveFocus "up" }
+        bind "alt-down"  { MoveFocus "down" }
+
+
+        bind "alt-q" { ClosePane }
+
+        bind "alt-enter" { SplitHorizontal }
+
+        bind "alt-\\" { SplitVertical }
+
+        bind "alt-t" { NewTab }
+    }
+}
