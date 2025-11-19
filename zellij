@@ -9,28 +9,18 @@ keybinds clear-defaults=true {
     }
 
     pane {
+        bind "Alt Left"  { MoveFocus "left"; }
+        bind "Alt Down"  { MoveFocus "down"; }
+        bind "Alt Up"    { MoveFocus "up"; }
+        bind "Alt Right" { MoveFocus "right"; }
+        bind "Alt q"     { ClosePane; SwitchToMode "locked"; }
+        bind "Alt Enter" { SplitHorizontal; SwitchToMode "locked"; }
+        bind "Alt \\"    { SplitVertical; SwitchToMode "locked"; }
+        bind "Alt t"     { NewTab; SwitchToMode "locked"; }
 
-        bind "alt-left"  { MoveFocus "left"; }
-        bind "alt-down"  { MoveFocus "down"; }
-        bind "alt-up"    { MoveFocus "up"; }
-        bind "alt-right" { MoveFocus "right"; }
-
-    
-        bind "alt-q" { ClosePane; SwitchToMode "locked"; }
-
-       
-        bind "alt-enter" { SplitHorizontal; SwitchToMode "locked"; }
-
-       
-        bind "alt-\\" { SplitVertical; SwitchToMode "locked"; }
-
-   
-        bind "alt-t" { NewTab; SwitchToMode "locked"; }
-
-      
-        bind "Left" { MoveFocus "left"; }
-        bind "Down" { MoveFocus "down"; }
-        bind "Up" { MoveFocus "up"; }
+        bind "Left"  { MoveFocus "left"; }
+        bind "Down"  { MoveFocus "down"; }
+        bind "Up"    { MoveFocus "up"; }
         bind "Right" { MoveFocus "right"; }
         bind "c" { SwitchToMode "renamepane"; PaneNameInput 0; }
         bind "d" { NewPane "down"; SwitchToMode "locked"; }
