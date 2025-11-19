@@ -6,42 +6,30 @@ default_mode "locked"
 
 keybinds clear-defaults=true {
 
-    # מצב נעילה — עוזר רק לצאת ל-normal
     locked {
-        bind "Ctrl g" { SwitchToMode "normal"; }
+        bind "Ctrl g" { SwitchToMode "pane"; }
     }
 
-    # מצב פאנלים (העבודה הרגילה)
     pane {
-        # ניווט בין פאנלים
         bind "Alt Left"  { MoveFocus "left"; }
         bind "Alt Right" { MoveFocus "right"; }
         bind "Alt Up"    { MoveFocus "up"; }
         bind "Alt Down"  { MoveFocus "down"; }
 
-        # מה שביקשת
-        bind "Alt Enter" { NewPane "down";  SwitchToMode "locked"; }   # חלוקה אופקית
-        bind "Alt \\"    { NewPane "right"; SwitchToMode "locked"; }   # חלוקה אנכית
-        bind "Alt q"     { CloseFocus;      SwitchToMode "locked"; }   # סגירת פאנל
-        bind "Alt t"     { NewTab;          SwitchToMode "locked"; }   # טאב חדש
-        bind "Tab"       { ToggleTab; }                                # מעבר בין טבים
+        bind "Alt Enter" { NewPane "down";  SwitchToMode "pane"; }
+        bind "Alt \\"    { NewPane "right"; SwitchToMode "pane"; }
+        bind "Alt q"     { CloseFocus;      SwitchToMode "pane"; }
+        bind "Alt t"     { NewTab;          SwitchToMode "pane"; }
 
-        # אלט N לא עושה כלום → לא נוגעים
+        bind "Tab" { ToggleTab; }
+
+        bind "Ctrl g" { SwitchToMode "locked"; }
     }
 
-    # מצב טאב — בסיסי בלבד
     tab {
         bind "Left"  { GoToPreviousTab; }
         bind "Right" { GoToNextTab; }
         bind "Tab"   { ToggleTab; }
-        bind "t"     { NewTab; SwitchToMode "locked"; }
-        bind "Ctrl g" { SwitchToMode "locked"; }
-    }
-
-    # לקפוץ חזרה למצב פאנל
-    normal {
-        bind "p" { SwitchToMode "pane"; }
-        bind "t" { SwitchToMode "tab"; }
-        bind "Ctrl g" { SwitchToMode "locked"; }
+        bind "Ctrl g" { SwitchToMode "pane"; }
     }
 }
