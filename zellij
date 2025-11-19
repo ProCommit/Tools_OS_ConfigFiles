@@ -1,18 +1,46 @@
-keybinds {
-    shared {
+theme "tokyo-night"
+default_layout "compact"
+on_force_close "quit"
 
-        bind "alt-left"  { MoveFocus "left" }
-        bind "alt-right" { MoveFocus "right" }
-        bind "alt-up"    { MoveFocus "up" }
-        bind "alt-down"  { MoveFocus "down" }
+default_mode "locked"
 
+keybinds clear-defaults=true {
 
-        bind "alt-q" { ClosePane }
+    locked {
+        bind "Ctrl g" { SwitchToMode "normal"; }
+    }
 
-        bind "alt-enter" { SplitHorizontal }
+    // ----- PANE MODE -----
+    pane {
 
-        bind "alt-\\" { SplitVertical }
+        // ניווט בין פאנלים עם ALT + חצים
+        bind "alt-left"  { MoveFocus "left"; }
+        bind "alt-right" { MoveFocus "right"; }
+        bind "alt-up"    { MoveFocus "up"; }
+        bind "alt-down"  { MoveFocus "down"; }
 
-        bind "alt-t" { NewTab }
+        // סגירת פאנל ALT + Q
+        bind "alt-q" { ClosePane; }
+
+        // חלוקה אופקית ALT + Enter
+        bind "alt-enter" { SplitHorizontal; }
+
+        // חלוקה אנכית ALT + \
+        bind "alt-\\" { SplitVertical; }
+
+        // פתיחת טאב ALT + T
+        bind "alt-t" { NewTab; }
+    }
+
+    // ----- TAB MODE -----
+    tab {
+        bind "Left"  { GoToPreviousTab; }
+        bind "Right" { GoToNextTab; }
+        bind "Down"  { GoToNextTab; }
+        bind "Up"    { GoToPreviousTab; }
+
+        bind "1" { GoToTab 1; SwitchToMode "locked"; }
+        bind "2" { GoToTab 2; SwitchToMode "locked"; }
+        bind "3" { GoToTab 3; SwitchToMode "locked"; }
     }
 }
