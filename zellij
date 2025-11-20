@@ -33,3 +33,47 @@ keybinds clear-defaults=true {
         bind "Ctrl g" { SwitchToMode "pane"; }
     }
 }
+
+
+
+
+
+
+
+
+
+
+theme "dracula"
+default_layout "compact"
+on_force_close "quit"
+default_mode "locked"
+
+keybinds clear-defaults=true {
+
+    shared_among "normal" "locked" "pane" "tab" "scroll" "resize" "move" {
+        # ניווט פיינים
+        bind "Alt Left"  { MoveFocus "left"; }
+        bind "Alt Right" { MoveFocus "right"; }
+        bind "Alt Up"    { MoveFocus "up"; }
+        bind "Alt Down"  { MoveFocus "down"; }
+
+   
+        bind "Alt Enter" { NewPane "down";  SwitchToMode "locked"; }
+        bind "Alt \\"    { NewPane "right"; SwitchToMode "locked"; }
+
+
+        bind "Alt q" { CloseFocus; SwitchToMode "locked"; }
+
+     
+        bind "Alt t" { NewTab; }
+        bind "Tab"   { ToggleTab; }
+        bind "Left"  { GoToPreviousTab; }
+        bind "Right" { GoToNextTab; }
+    }
+
+ 
+    shared_except "locked" {
+        bind "Esc" { SwitchToMode "locked"; }
+    }
+}
+
