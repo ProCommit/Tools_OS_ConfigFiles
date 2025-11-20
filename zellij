@@ -70,3 +70,8 @@ keybinds clear-defaults=true {
         bind "Esc" { SwitchToMode "locked"; }
     }
 }
+
+
+if command -v zellij >/dev/null 2>&1; then
+    [[ "$ZELLIJ" != "0" ]] && exec zellij
+f
