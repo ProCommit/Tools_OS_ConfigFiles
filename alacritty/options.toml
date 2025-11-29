@@ -6,7 +6,9 @@ decorations =  "None"
 
 
 [font]
-normal = { family = "monospace", style = "Bold" }
+normal = { family = "CascaydiaMono Nerd Font", style = "Regular" }
+bold   = { family = "CascaydiaMono Nerd Font", style = "Bold" }
+italic = { family = "CascaydiaMono Nerd Font", style = "Italic" }
 size = 15.0
 
 
